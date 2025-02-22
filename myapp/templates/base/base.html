@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Catering Project{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-400 font-sans">
+
+    <!-- Navbar -->
+    <header class="bg-white shadow-md">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">CATERING <span class="text-blue-600">PROJECT.</span></div>
+            <div class="flex items-center space-x-2">
+                <input type="text" placeholder="Search..." class="px-3 py-1 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button class="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300">🔍</button>
+            </div>
+            <div class="space-x-4">
+                <a href="{% url 'register' %}" class="text-gray-700 hover:text-blue-600">Login / Signup</a>
+                <a href="#" class="text-gray-700 hover:text-blue-600">🛒 Cart</a>
+                <h2>Welcome, {{ user.username }}!</h2>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4 mt-10">
+        <p>&copy; 2025 Catering Project. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

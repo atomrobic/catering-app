@@ -1,0 +1,106 @@
+
+{% extends "base/base.html" %}
+
+{% block content %}
+<!-- Header Section -->
+
+</header>
+
+<!-- Main Content -->
+<main class="container mx-auto px-4 py-8">
+
+    <!-- Categories Navigation -->
+    <nav class="flex space-x-4 overflow-x-auto pb-2">
+        {% for category in categories %}
+        <a href="#" class="whitespace-nowrap px-4 py-2 bg-gray-200 rounded-full hover:bg-blue-600 hover:text-white transition duration-300">{{ category.name }}</a>
+        {% endfor %}
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="mt-8 text-center">
+        <h1 class="text-4xl font-bold text-gray-800">Shop Our Finger Food Platters Now</h1>
+        <button class="mt-4 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300">SHOP NOW</button>
+    </section>
+
+    <!-- Featured Products Carousel -->
+    <section class="carousel-container mt-8 relative overflow-hidden">
+        <div class="carousel-track flex space-x-4">
+            {% for item in menu_items %}
+            <div class="carousel-item bg-white p-4 rounded-lg shadow-md w-40 h-40 flex flex-col items-center justify-center overflow-hidden">
+                <div class="relative w-50 h-50">
+                    {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-20 h-20 object-cover rounded-lg hover:scale-105 transition duration-300">
+                    {% else %}
+                    <img src="https://via.placeholder.com/80" alt="Default Image" class="w-full h-full object-cover rounded-lg hover:scale-105 transition duration-300">
+                    {% endif %}
+                </div>
+                <h2 class="mt-2 text-sm font-semibold text-gray-800 text-center">{{ item.name }}</h2>
+                <p class="text-xs text-gray-600 text-center">{{ item.price }} + GST</p>
+            </div>
+            {% endfor %}
+        </div>
+        <button id="prev" class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-200 text-gray-800 p-4 rounded-full hover:bg-gray-300">❮</button>
+        <button id="next" class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-200 text-gray-800 p-4 rounded-full hover:bg-gray-300">❯</button>
+    </section>
+
+    <!-- Full-Width Image -->
+    <section class="w-full mt-5">
+        <img src="https://www.licious.in/blog/wp-content/uploads/2022/04/shutterstock_460012054-1-min.jpg" alt="Catering Banner" class="w-full h-40 object-cover">
+    </section>
+
+    <!-- Featured Products Grid -->
+    <section class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        {% for item in menu_items %}
+        <div class="bg-white p-4 rounded-lg shadow-md relative">
+            <div class="relative w-full h-48">
+                <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-full object-cover rounded-md">
+                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 rounded-md">
+                    <p class="text-white font-semibold text-lg">{{ item.name }}</p>
+                </div>
+            </div>
+            <p class="mt-2 text-gray-600">more details</p>
+        </div>
+        {% endfor %}
+    </section>
+
+    <!-- Contact Us -->
+    <section class="my-10 text-center">
+        <h2 class="text-2xl font-semibold">Contact Us</h2>
+        <form class="flex flex-col gap-4 mt-4 max-w-md mx-auto">
+            <input type="text" placeholder="Your Name" required class="p-2 border rounded">
+            <input type="email" placeholder="Your Email" required class="p-2 border rounded">
+            <textarea placeholder="Your Message" required class="p-2 border rounded"></textarea>
+            <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Send</button>
+        </form>
+    </section>
+
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Carousel Script
+    const track = document.querySelector('.carousel-track');
+    const items = Array.from(track.children);
+    const nextButton = document.getElementById('next');
+    const prevButton = document.getElementById('prev');
+    const itemWidth = items[0].getBoundingClientRect().width;
+    let index = 0;
+    const maxScroll = (items.length - 1) * itemWidth;
+
+    function handleNext() {
+        if (index >= maxScroll) return;
+        index += itemWidth;
+        track.style.transform = `translateX(-${index}px)`;
+    }
+
+    function handlePrev() {
+        if (index <= 0) return;
+        index -= itemWidth;
+        track.style.transform = `translateX(-${index}px)`;
+    }
+
+    nextButton.addEventListener('click', handleNext);
+    prevButton.addEventListener('click', handlePrev);
+</script>
+{% endblock %}

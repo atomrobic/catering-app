@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h2>Register</h2>
+
+    <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" placeholder="Enter Username" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter Email" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter Password" required><br><br>
+
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter Password" required><br><br>
+
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" placeholder="Enter Phone Number" required><br><br>
+
+        <label for="address">Address:</label>
+        <textarea id="address" name="address" placeholder="Enter Address" required></textarea><br><br>
+
+        <label for="role">Role:</label>
+        <select id="role" name="role">
+            <option value="customer">Customer</option>
+            <option value="admin">Admin</option>
+        </select><br><br>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+</body>
+</html>

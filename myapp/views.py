@@ -149,7 +149,7 @@ def place_catering_order(request):
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-from .models import CateringOrder
+from .models import CateringOrder,Category,MenuItem
 
 def admin_catering_orders(request):
     """ Admin dashboard view to display and manage catering orders """
@@ -180,18 +180,11 @@ def menu_items_view(request):
     menu_items = MenuItem.objects.all()
     return render(request, "menu_list.html", {"menu_items": menu_items})
 
-from django.shortcuts import render, get_object_or_404
-from .models import MenuItem
-
-def admin_menu_view(request):
-    menu_items = MenuItem.objects.all()  # Fetch all menu items from the database
-    return render(request, 'add_foods.html', {'menu_items': menu_items})
-
 
 
 # Function to check if user is an admin
 def is_admin(user):
-    return user.is_staff
+    return user.is_staff 
 
 
 def add_menu_item(request):
@@ -203,5 +196,73 @@ def add_menu_item(request):
     else:
         form = MenuItemForm()
 
-    menu_items = MenuItem.objects.all()  # Fetch menu items to display
-    return render(request, "add_menu_item", {"form": form, "menu_items": menu_items})
+    menu_items = MenuItem.objects.all()  # Fetch all menu items from the database
+    return render(request, "add_foods.html", {"form": form, "menu_items": menu_items})
+
+def delete_menu_item(request, item_id):
+    if request.method == "POST":
+        menu_item = get_object_or_404(MenuItem, id=item_id)
+        menu_item.delete()
+        return JsonResponse({"success": True})  # Send a success response
+    
+    return JsonResponse({"success": False, "error": "Invalid request"}, status=400)
+
+from django.shortcuts import render
+from django.http import JsonResponse
+
+# def menu_view_category(request):
+#     categories = Category.objects.all()
+#     print(Category)
+#     selected_category = request.GET.get('category', 'all')
+
+#     print(f"Selected category: {selected_category}")  # Debugging output
+
+#     if selected_category == "all":
+#         menu_items = MenuItem.objects.all()
+#     else:
+#         try:
+#             selected_category = int(selected_category)  # Ensure it's an integer
+#             menu_items = MenuItem.objects.filter(category_id=selected_category)
+#         except ValueError:
+#             menu_items = MenuItem.objects.all()
+
+#     return render(request, "add_foods.html", {
+#         "categories": categories,
+#         "menu_items": menu_items,
+#     })
+
+def menu_view_category(request):
+    categories = Category.objects.all()
+    selected_category = request.GET.get("category", "all")  # Default to 'all'
+    
+    print(f"Selected category: {selected_category}")  # Debugging output
+
+    if selected_category == "all":
+        menu_items = MenuItem.objects.all()
+    else:
+        try:
+            selected_category = int(selected_category)  # Convert to int
+            menu_items = MenuItem.objects.filter(category_id=selected_category)
+        except ValueError:
+            menu_items = MenuItem.objects.all()
+
+    return render(request, "add_foods.html", {
+        "categories": categories,
+        "menu_items": menu_items,
+        "selected_category": selected_category,  # ✅ Pass the selected category
+    })
+
+
+def edit_menu_item(request, item_id):
+    menu_item = get_object_or_404(MenuItem, id=item_id)
+
+    if request.method == "POST":
+        form = MenuItemForm(request.POST, request.FILES, instance=menu_item)
+        if form.is_valid():
+            form.save()
+            return redirect("menu_view_category")  # Redirect back to the menu page
+
+    else:
+        form = MenuItemForm(instance=menu_item)
+
+    return render(request, "add_foods.html", {"form": form, "menu_item": menu_item})
